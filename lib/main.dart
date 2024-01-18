@@ -36,6 +36,7 @@ class _HomeState extends State<Home> {
   final path = 'images/';
   final types = ['rock', 'scissors', 'paper'];
   bool isFirst = true;
+  bool isDone = false;
   String userInput = 'rock';
   String cpuInput = '?';
   String result = '무승부';
@@ -61,10 +62,10 @@ class _HomeState extends State<Home> {
                             style:
                                 TextStyle(fontSize: 60, color: Colors.blue)))),
               ))
-            : Expanded(child: Center(child: makeContainer2(cpuInput))),
+            : Expanded(child: Center(child: makeCpuContainer(cpuInput))),
         Expanded(
             child: Center(
-                child: Text(result,
+                child: Text(isFirst ? '아래에서 선택하세요' : result,
                     style: const TextStyle(fontSize: 40, color: Colors.red)))),
         Expanded(
           child: Row(
@@ -79,30 +80,34 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Container makeContainer(String type) {
+  Container makeUserContainer(String type) {
     return Container(
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         decoration: BoxDecoration(
-          border: Border.all(width: 8, color: Colors.grey),
+          border: Border.all(
+              width: 8,
+              color: (isDone && type == userInput) ? Colors.blue : Colors.grey),
           borderRadius: BorderRadius.circular(24),
         ),
         child: Image.asset('$path$type.png'));
   }
 
-  Container makeContainer2(String type) {
+  Container makeCpuContainer(String type) {
     return Container(
         height: 150,
         width: 150,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         decoration: BoxDecoration(
-          border: Border.all(width: 8, color: Colors.grey),
+          border:
+              Border.all(width: 8, color: isDone ? Colors.green : Colors.grey),
           borderRadius: BorderRadius.circular(24),
         ),
         child: Image.asset('$path$type.png'));
   }
 
   InkWell makeInkWell(String type) {
-    return InkWell(onTap: () => setUserInput(type), child: makeContainer(type));
+    return InkWell(
+        onTap: () => setUserInput(type), child: makeUserContainer(type));
   }
 
   void setUserInput(String type) {
@@ -110,6 +115,7 @@ class _HomeState extends State<Home> {
       userInput = type;
       cpuInput = types[Random().nextInt(3)];
       isFirst = false;
+      isDone = true;
       result = getResult();
     });
   }
