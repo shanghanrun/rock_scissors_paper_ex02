@@ -36,7 +36,6 @@ class _HomeState extends State<Home> {
   final path = 'images/';
   final types = ['rock', 'scissors', 'paper'];
   bool isFirst = true;
-  bool isDone = false;
   String userInput = 'rock';
   String cpuInput = '?';
   String result = '무승부';
@@ -62,7 +61,7 @@ class _HomeState extends State<Home> {
                             style:
                                 TextStyle(fontSize: 60, color: Colors.blue)))),
               ))
-            : Expanded(child: Center(child: makeCpuContainer(cpuInput))),
+            : Expanded(child: Center(child: doneCpuContainer(cpuInput))),
         Expanded(
             child: Center(
                 child: Text(isFirst ? '아래에서 선택하세요' : result,
@@ -86,20 +85,20 @@ class _HomeState extends State<Home> {
         decoration: BoxDecoration(
           border: Border.all(
               width: 8,
-              color: (isDone && type == userInput) ? Colors.blue : Colors.grey),
+              color: (!isFirst && type == userInput) ? Colors.blue : Colors.grey),
           borderRadius: BorderRadius.circular(24),
         ),
         child: Image.asset('$path$type.png'));
   }
 
-  Container makeCpuContainer(String type) {
+  Container doneCpuContainer(String type) {
     return Container(
         height: 150,
         width: 150,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         decoration: BoxDecoration(
           border:
-              Border.all(width: 8, color: isDone ? Colors.green : Colors.grey),
+              Border.all(width: 8, color: Colors.green ),
           borderRadius: BorderRadius.circular(24),
         ),
         child: Image.asset('$path$type.png'));
@@ -115,7 +114,6 @@ class _HomeState extends State<Home> {
       userInput = type;
       cpuInput = types[Random().nextInt(3)];
       isFirst = false;
-      isDone = true;
       result = getResult();
     });
   }
